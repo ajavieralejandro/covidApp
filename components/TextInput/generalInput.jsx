@@ -7,9 +7,7 @@ const MyComponent = ({label}) => {
 
   return (
     <TextInput style={{maxHeight:60,width:200,marginTop:'2%'}}
-      label={label?label:"password"}
-      secureTextEntry
-      right={<TextInput.Icon name="eye" />}
+      label={label}
     />
   );
 };

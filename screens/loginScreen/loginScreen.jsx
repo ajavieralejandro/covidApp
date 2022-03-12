@@ -3,8 +3,11 @@ import { StyleSheet, Text, View, TextInput} from 'react-native';
 import PasswordInput from '../../components/TextInput/passwordInput';
 import MailInput from '../../components/TextInput/mailInput';
 import Button from '../../components/Button/button';
+import RegisterButton from '../../components/Button/registerButton';
 
-export default function WelcomeScreen() {
+
+export default function LoginScreen({navigation}) {
+  console.log(navigation);
   return (
 
     <View style={styles.container}>
@@ -15,7 +18,7 @@ export default function WelcomeScreen() {
       <PasswordInput />
 
       <Button text="Ingresar" />
-      <Button text="Registrarse" />
+      <RegisterButton navigation={navigation}  />
 
 
     </View>
