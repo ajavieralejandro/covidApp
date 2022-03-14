@@ -1,5 +1,4 @@
 
-import { Provider as PaperProvider } from 'react-native-paper';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createNavigationContainer, createSwitchNavigator } from 'react-navigation';
 import { createAppContainer } from 'react-navigation';
@@ -9,53 +8,35 @@ import RegisterScreen from './screens/registerScreen/registerScreen';
 import { View,Text } from 'react-native';
 import HomeScreen from './screens/homeScreen/homeScreen';
 
-const BaseStack = createStackNavigator({
+const OnBoarding = createStackNavigator({
   Login : {
     screen : LoginScreen
   },
   Register :{
     screen : RegisterScreen
   },
-  Home :{
-    screen : HomeScreen
-  }
-  
+
 },{
   initialRouteName : 'Login',
+});
+
+const AppNavigator = createStackNavigator({
+  Home : {
+    screen : HomeScreen
+  }
+},{
   headerMode : 'none'
 });
 
+const BaseStack = createSwitchNavigator({
+  OnBoarding : OnBoarding,
+  Root : AppNavigator
+},{
+  initialRouteName : 'OnBoarding'
+})
 
 
-const DetailScreen = ({navigation}) =>{
-  console.log(navigation);
-  return(
-    <View>
-      <Text>
-        Hola soy Detail
-      </Text>
-    </View>
-  )
-}
 
-const BaseStack2 = createStackNavigator({
-  Home : {
-    screen : HomeScreen
-  },
-  Detail : {
-    screen : DetailScreen
-  }
-},{initialRouteKey : 'Home',
-headerMode : 'none'
-});
 
-/*
-export default () =>{
-  return(
-    <PaperProvider>
-      <Aux navigation={this.props.navigation} />
-    </PaperProvider>
-  )
-};*/
 
-export default createAppContainer(BaseStack2);
+export default createAppContainer(BaseStack);

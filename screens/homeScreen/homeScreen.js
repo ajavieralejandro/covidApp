@@ -5,6 +5,7 @@ import ContactList from '../../components/contactList/contactList';
 import { color } from 'react-native-elements/dist/helpers';
 import { withTheme } from 'react-native-paper';
 import { DefaultTheme,Provider as PaperProvider } from 'react-native-paper';
+import  Locations from '../../components/locations/locations';
 
 
 
@@ -12,7 +13,7 @@ const MusicRoute = () => <ContactScreen />;
 
 const AlbumsRoute = () => <ContactList />
 
-const RecentsRoute = () => <Text>Recents</Text>;
+const RecentsRoute = () => <Locations />;
 
 const MyComponent = (props) => {
   const [index, setIndex] = React.useState(0);

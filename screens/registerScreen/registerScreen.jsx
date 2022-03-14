@@ -11,8 +11,9 @@ export default function LoginScreen() {
     <View style={styles.container}>
     <StatusBar style="auto" />
 
-      <Text>Registrate</Text>
-      <TextInput label={"Ingrese Nombre"} />
+    <Text style={{fontSize:18}}>Cree un nuevo usuario</Text>
+      <TextInput label={"Nombre"} />
+      <TextInput label={"Apellido"} />
       <MailInput />
       <PasswordInput />
       <PasswordInput label="confirmar password" />
