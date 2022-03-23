@@ -2,6 +2,8 @@ import React,{useEffect,useState} from 'react'
 import { View, Text } from 'react-native';
 import * as Location from 'expo-location';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import MapView from 'react-native-maps';
 import  Constants  from 'expo-constants';
 import { Alert } from 'react-native';
@@ -12,14 +14,16 @@ import { Button,ActivityIndicator } from 'react-native-paper';
 
 
 const addLocation = async (location) =>{
+    const token = AsyncStorage.getItem('token');
     const currentLocation = {
         latitude : location.latitude,
         longitude : location.longitude
     }
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(currentLocation)
+      headers: { 'Content-Type': 'application/json','Authorization':`Bearer ${token}` },
+      body: JSON.stringify(currentLocation),
+      
   };
 
 

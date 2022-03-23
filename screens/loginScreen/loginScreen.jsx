@@ -7,6 +7,8 @@ import { TextInput } from 'react-native-paper';
 import axios from 'axios';
 import { Alert } from 'react-native';
 import { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 
@@ -33,8 +35,11 @@ export default function LoginScreen({navigation}) {
         console.log(json);
         if(json.status==='fail')
           Alert.alert(json.message);
-        else
+        else{
+          AsyncStorage.setItem('token',json.token);
           navigation.navigate("Home");
+
+        }
 
 
       })
