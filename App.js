@@ -7,6 +7,7 @@ import LoginScreen from './screens/loginScreen/loginScreen';
 import RegisterScreen from './screens/registerScreen/registerScreen';
 import { View,Text } from 'react-native';
 import HomeScreen from './screens/homeScreen/homeScreen';
+import authLoading from './screens/authLoading/authLoading';
 
 const OnBoarding = createStackNavigator({
   Login : {
@@ -29,10 +30,11 @@ const AppNavigator = createStackNavigator({
 });
 
 const BaseStack = createSwitchNavigator({
+  authLoading,
   OnBoarding : OnBoarding,
   Root : AppNavigator
 },{
-  initialRouteName : 'OnBoarding'
+  initialRouteName : 'authLoading'
 })
 
 
