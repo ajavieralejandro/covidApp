@@ -4,18 +4,22 @@ import { ActivityIndicator } from 'react-native';
 import { ScrollView,View, Text, FlatList,StyleSheet,Image } from 'react-native';
 import UserAvatar from 'react-native-user-avatar';
 import SearchBar from '../searchBar/searchBar';
+import AppBar from '../AppBar/AppBar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CalculateRisk from '../../utils/utils';
 
-
-const renderItem = ({item}) =>{
-    return(
+const renderItem = (item) =>{
+    const contact = item.item;
+    return(<>
         <View style={styles.itemWrapperStyle}>
-            <Image style={styles.itemImageStyle} source={{uri : item.picture.large}} />
             <View >
-            <Text>{item.name.title} {item.name.first} {item.name.last}</Text>
+            <Text>{contact.name} {contact.lastName}</Text>
+            <Text>{contact.email}</Text>
             </View>
 
 
         </View>
+        </>
     )
 
 }
@@ -44,6 +48,48 @@ const styles = StyleSheet.create({
 
 
 export default function ContactList() {
+
+
+const getContacts2 = async () =>{
+    console.log("Hola estoy tratando de obtener los contactos");
+    const token = await AsyncStorage.getItem('token');
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json','Authorization':`Bearer ${token}` },
+      
+  };
+
+
+  try{fetch('https://secret-refuge-50230.herokuapp.com/api/v1/contacts/', requestOptions)
+      .then(response =>response.json())
+      .then((json)=>{
+        console.log("Voy a imprimir el json");
+        console.log(json);
+        if(json.status==='error')
+          Alert.alert(json.message);
+        else
+        {
+            console.log("calculo nuevos datos :");
+            console.log(json.data);
+            setContacts(json.data);
+            console.log(
+            "Renderizando datos"
+            )
+            console.log(CalculateRisk(json.data));
+
+         
+            
+        }
+        setIsLoading(false);
+      })
+    }
+      catch(err){
+        console.log("Hola estoy aca en error");
+        Alert.alert(err.message);
+      }
+
+
+}
    
     const [contacts, setContacts] = useState([]);
     const [page,setPage] = useState(0);
@@ -75,15 +121,18 @@ export default function ContactList() {
     }
 
     useEffect(()=>{
-        getContacts()
+        getContacts2()
+        
     },[page]);
 
 
     return (
+        <>
         <View style={{flex:1}}>
+            <AppBar />
             <View>
                         <SearchBar label="buscar contacto" />
-                        </View>
+            </View>
 
             <FlatList 
                 data={contacts} renderItem={renderItem} keyExtractor={item=>item.email}
@@ -93,6 +142,7 @@ export default function ContactList() {
             />
 
         </View>
+        </>
 
     )
 }

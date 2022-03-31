@@ -6,16 +6,18 @@ import { color } from 'react-native-elements/dist/helpers';
 import { withTheme } from 'react-native-paper';
 import { DefaultTheme,Provider as PaperProvider } from 'react-native-paper';
 import  Locations from '../../components/locations/locations';
+import Profile from '../../components/Profile/Profile';
 
 
 
-const MusicRoute = () => <ContactScreen />;
-
-const AlbumsRoute = () => <ContactList />
-
-const RecentsRoute = () => <Locations />;
 
 const MyComponent = (props) => {
+
+const MusicRoute = () =><ContactList /> ;
+
+const AlbumsRoute = () => <Profile navigation={props.navigation} />;
+
+const RecentsRoute = () => <Locations />;
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: 'music', title: 'Contactos', icon: 'account-group' },

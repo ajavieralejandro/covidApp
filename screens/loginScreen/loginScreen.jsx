@@ -62,8 +62,7 @@ export default function LoginScreen({navigation}) {
         top:'50%',
         left:'50%'
       }}>
-      <ActivityIndicator style={{
-      }}
+      <ActivityIndicator  
     /></View>:null}
 
       <Text  style={{fontSize:18}}>Inisiar sesion</Text>
