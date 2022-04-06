@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
 export default function ContactList() {
 
 
-const getContacts2 = async () =>{
+const getContacts2 = async (mounted) =>{
     console.log("Hola estoy tratando de obtener los contactos");
     const token = await AsyncStorage.getItem('token');
     const requestOptions = {
@@ -71,11 +71,13 @@ const getContacts2 = async () =>{
         {
             console.log("calculo nuevos datos :");
             console.log(json.data);
+            if(mounted)
             setContacts(json.data);
             console.log(
             "Renderizando datos"
             )
-            console.log(CalculateRisk(json.data));
+           
+            setContactsRisk(CalculateRisk(json.data));
 
          
             
@@ -84,13 +86,12 @@ const getContacts2 = async () =>{
       })
     }
       catch(err){
-        console.log("Hola estoy aca en error");
         Alert.alert(err.message);
       }
 
 
 }
-   
+    const [contactsRisk, setContactsRisk] = useState("")
     const [contacts, setContacts] = useState([]);
     const [page,setPage] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
@@ -121,7 +122,11 @@ const getContacts2 = async () =>{
     }
 
     useEffect(()=>{
-        getContacts2()
+        let mounted = true;
+        getContacts2(mounted);
+        return () => mounted = false;
+
+
         
     },[page]);
 
@@ -129,11 +134,14 @@ const getContacts2 = async () =>{
     return (
         <>
         <View style={{flex:1}}>
-            <AppBar />
-            <View>
-                        <SearchBar label="buscar contacto" />
-            </View>
+            <AppBar risk={contactsRisk} />
+                {
+                    (contacts.length>0)?<>
+                             <>
+                             <View>
 
+            </View>
+        
             <FlatList 
                 data={contacts} renderItem={renderItem} keyExtractor={item=>item.email}
                 ListFooterComponent={renderLoader}
@@ -141,7 +149,12 @@ const getContacts2 = async () =>{
                     
             />
 
-        </View>
+            </></>:<Text>No hay contactos</Text>
+
+                }
+                        </View>
+
+       
         </>
 
     )

@@ -49,7 +49,6 @@ export default function Locations() {
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(true);
     const getLocations = async (mounted) =>{
-        console.log("HOla estoy tratando de acceder a las locaciones");
         const token = await AsyncStorage.getItem('token');
         const requestOptions = {
           method: 'GET',
@@ -61,13 +60,10 @@ export default function Locations() {
       try{fetch('https://secret-refuge-50230.herokuapp.com/api/v1/locations/locations', requestOptions)
           .then(response =>response.json())
           .then((json)=>{
-            console.log("Voy a imprimir el json");
-            console.log(json);
             if(json.status==='error')
               Alert.alert(json.message);
             else
             {
-                console.log("Hola estoy aca");
                 let locations = json.data;
                 const _toAdd = [];
                 locations.forEach(el=>_toAdd.push({//...el.currentLocation.coordinates
@@ -112,7 +108,7 @@ export default function Locations() {
                 //Llamo a los otros metodos
                 //getLocations();
                 updateContacts();
-                getLocations();
+                getLocations(true);
 
     
     

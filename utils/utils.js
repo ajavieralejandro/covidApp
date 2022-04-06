@@ -20,8 +20,8 @@ export default function CalculateRisk(contacts){
                 break;
             case 'red':{
                 rojo++;
-                if(rojo>8)
-                    return 'red'
+                if(rojo>4)
+                    return 'rojo'
                     break;
             }
             default : 
@@ -29,9 +29,12 @@ export default function CalculateRisk(contacts){
         }
         });
 
-        let array = [];
-        verde = (verde/aux);
-        console.log(verde);
-        return verde;
+        if(rojo<2)
+        {
+            if(amarillo<10)
+                return "verde";
+        }
+        else
+         return "amarillo";
 
     }

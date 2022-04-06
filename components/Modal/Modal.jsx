@@ -1,8 +1,45 @@
 import React, { useState } from "react";
 import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
 import { Switch } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+
 
 const App = ({modalVisible,setModalVisible}) => {
+    const handlePress = () =>{
+        updateRisk();
+        setModalVisible(!modalVisible)
+    }
+    
+
+const updateRisk = async () =>{
+    const token = await AsyncStorage.getItem('token');
+    let status = "green";
+    if(test)
+        status = "red";
+    else{
+        if(contact || sintoms)
+            status = "yellow"
+    }
+    let toSent = {risk_status : status};
+
+    console.log(toSent);
+    const requestOptions = {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json','Authorization':`Bearer ${token}`},
+        body : JSON.stringify(toSent)
+        
+    };
+  
+  
+    try{fetch('https://secret-refuge-50230.herokuapp.com/api/v1/users/updateMe', requestOptions)
+    .then(response=>response.json())
+    .then(data=>console.log(data));
+    }
+    catch(err){Alert.alert(err.message)};
+    
+}
     const [test, setTest] = useState(false);
     const [contact, setContact] = useState(false);
     const [sintoms, setSintoms] = useState(false);
@@ -39,7 +76,7 @@ const App = ({modalVisible,setModalVisible}) => {
             
             <Pressable
               style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
+              onPress={() => handlePress()}
             >
               <Text style={styles.textStyle}>Cargar Estado</Text>
             </Pressable>
