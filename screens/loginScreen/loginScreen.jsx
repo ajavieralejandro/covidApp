@@ -16,24 +16,13 @@ import * as Yup from 'yup';
 
 export default function LoginScreen({navigation}) {
   const [loading, setLoading] = useState(false);
-  const formik = useFormik({
-    initialValues:{
-      email : '',
-      password : '',
-    },
-    validationSchema:Yup.object({
-      email : Yup.string().email('Correo invalido')
-      .required('email requerido'),
-      password : Yup.string().min(8,'Password requiere 8 caracteres').required('password requerido')
-    }),
-    handleSubmit:() =>console.log(x)
-  });
-
+  const [validation, setValidation] = useState(true);
+  
   const initialState = {
     email : '',
     password : ''
   }
-  const handleSubmit = async values =>{
+  const onSubmit = async values =>{
     setLoading(true);
     const requestOptions = {
       method: 'POST',
@@ -66,18 +55,27 @@ export default function LoginScreen({navigation}) {
     
     
   }
+
+  const formik = useFormik({
+    initialValues:{
+      email : '',
+      password : '',
+    },
+    validationSchema:Yup.object({
+      email : Yup.string().email('Correo invalido')
+      .required('email requerido'),
+      password : Yup.string().min(8,'Password requiere 8 caracteres').required('password requerido')
+    }),
+    onSubmit: (values) => onSubmit(values)
+  });
+
   //const {inputs,subscribe,handleSubmit} =  useForm(initialState,onSubmit);
   return (
 
     <View style={styles.container}>
     <StatusBar style="auto" />
-    {loading?<View style={{
-        position:"absolute",
-        top:'50%',
-        left:'50%'
-      }}>
-      <ActivityIndicator  
-    /></View>:null}
+    {loading?
+      <ActivityIndicator/>:null}
 
       <Text  style={{fontSize:18}}>Inisiar sesion</Text>
       { formik.errors.email && formik.touched.email ? <Text>{formik.errors.email}</Text>:null }
@@ -98,7 +96,7 @@ export default function LoginScreen({navigation}) {
       right={<TextInput.Icon name="eye" />}
     />
 
-      <Button disabled={formik.errors.email || formik.errors.password} onPress={()=>handleSubmit(formik.values)}>Ingresar</Button>
+      <Button disabled={formik.errors.email || formik.errors.password } onPress={formik.handleSubmit}>Ingresar</Button>
       <Button onPress={()=>navigation.navigate("Register")}>Crear Nuevo Usuario</Button>
 
 
