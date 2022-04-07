@@ -46,7 +46,9 @@ const updateContacts = async () => {
 export default function Locations() {
     const [location, setLocation] = useState(null);
     const [locations, setLocations] = useState([]);
+    const [redLocations, setRedLocations] = useState([]);
     const [show, setShow] = useState(false);
+    const [showRed, setShowRed] = useState(false);
     const [loading, setLoading] = useState(true);
     const getLocations = async (mounted) =>{
         const token = await AsyncStorage.getItem('token');
@@ -83,6 +85,42 @@ export default function Locations() {
     
     
     }
+    const getRedLocations = async (mounted) =>{
+      console.log("Hola estoy en red locations");
+      const token = await AsyncStorage.getItem('token');
+      const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json','Authorization':`Bearer ${token}` },
+        
+    };
+  
+  
+    try{fetch('https://secret-refuge-50230.herokuapp.com/api/v1/locations/getRedLocations', requestOptions)
+        .then(response =>response.json())
+        .then((json)=>{
+          if(json.status==='error')
+            Alert.alert(json.message);
+          else
+          {
+              console.log(json.data);
+              const _toAdd = [];
+              json.data.forEach(el=>_toAdd.push({//...el.currentLocation.coordinates
+                  latitude : el.coordinates[0],
+                  longitude : el.coordinates[1]
+              }));
+              if(mounted)setRedLocations(_toAdd);
+          }
+  
+  
+        })
+      }
+        catch(err){
+          console.log("Hola estoy aca en error");
+          Alert.alert(err.message);
+        }
+  
+  
+  }
     const addLocation = async (location) =>{
         const token = await AsyncStorage.getItem('token');
         const currentLocation = {
@@ -134,6 +172,7 @@ export default function Locations() {
 
         getCurrentLocation(mounted);
         getLocations(mounted);
+        getRedLocations(mounted);
         return () => mounted = false;
 
     }, []);
@@ -189,6 +228,7 @@ const getCurrentLocation = async (mounted) =>{
         : null
     }
     <Button onPress={()=>addLocation(location)}>Agregar Locación</Button>
+    <Button onPress={()=>getRedLocations(true)}>Ver locaciones peligrosas</Button>
     <Button onPress={()=>setShow(!show)}>{show?"ocultar locaciones":"Ver locaciones"}</Button>
     </View>}
      

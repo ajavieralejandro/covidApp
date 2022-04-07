@@ -8,18 +8,32 @@ import axios from 'axios';
 import { Alert } from 'react-native';
 import { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 
 
 
 export default function LoginScreen({navigation}) {
   const [loading, setLoading] = useState(false);
+  const formik = useFormik({
+    initialValues:{
+      email : '',
+      password : '',
+    },
+    validationSchema:Yup.object({
+      email : Yup.string().email('Correo invalido')
+      .required('email requerido'),
+      password : Yup.string().min(8,'Password requiere 8 caracteres').required('password requerido')
+    }),
+    handleSubmit:() =>console.log(x)
+  });
 
   const initialState = {
     email : '',
     password : ''
   }
-  const onSubmit = async values =>{
+  const handleSubmit = async values =>{
     setLoading(true);
     const requestOptions = {
       method: 'POST',
@@ -52,7 +66,7 @@ export default function LoginScreen({navigation}) {
     
     
   }
-  const {inputs,subscribe,handleSubmit} =  useForm(initialState,onSubmit);
+  //const {inputs,subscribe,handleSubmit} =  useForm(initialState,onSubmit);
   return (
 
     <View style={styles.container}>
@@ -66,19 +80,25 @@ export default function LoginScreen({navigation}) {
     /></View>:null}
 
       <Text  style={{fontSize:18}}>Inisiar sesion</Text>
-      <TextInput value={inputs.email} onChangeText={subscribe('email')} style={{maxHeight:60,width:200,marginTop:'2%'}}
+      { formik.errors.email && formik.touched.email ? <Text>{formik.errors.email}</Text>:null }
+      { formik.errors.password && formik.touched.password ? <Text>{formik.errors.password}</Text>:null }
+
+      <TextInput 
+      onBlur={formik.handleBlur('email')}
+      value={formik.values.email} onChangeText={formik.handleChange('email')} style={{maxHeight:60,width:200,marginTop:'2%'}}
       label="email"
       right={<TextInput.Icon name="mail" />}
     />     
       <TextInput style={{maxHeight:60,width:200,marginTop:'2%'}}
       label={"password"}
       secureTextEntry
-      value={inputs.password}
-      onChangeText={subscribe('password')}
+      onBlur={formik.handleBlur('password')}
+      value={formik.values.password}
+      onChangeText={formik.handleChange('password')}
       right={<TextInput.Icon name="eye" />}
     />
 
-      <Button onPress={()=>handleSubmit()}>Ingresar</Button>
+      <Button disabled={formik.errors.email || formik.errors.password} onPress={()=>handleSubmit(formik.values)}>Ingresar</Button>
       <Button onPress={()=>navigation.navigate("Register")}>Crear Nuevo Usuario</Button>
 
 
